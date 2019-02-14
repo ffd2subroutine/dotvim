@@ -20,7 +20,8 @@
 
 execute pathogen#infect()
 
-filetype plugin indent on
+"filetype plugin indent on
+filetype plugin on
 
 colorscheme inkpot
 
@@ -31,15 +32,31 @@ set encoding=utf-8
 let g:airline_powerline_fonts = 1
 
 " vim-go
-let g:go_disable_autoinstall=1
+let g:go_list_type = "quickfix"
+let g:go_fmt_command = "goimports"
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+let g:go_metalinter_autosave = 1
+let g:go_def_mode = 'godef'
+let g:go_auto_type_info = 1
+let g:go_auto_sameids = 1
 
-" YCM
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-" don't ever show up the preview window on completion
-"set completeopt-=preview
-"let g:ycm_add_preview_to_completeopt = 0
-let g:ycm_key_list_select_completion = ['<Down>', '<Enter>'] "'<TAB>', commented out because of ultisnips
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#enable_at_startup = 1
+" <TAB>: completion. NOTE: TAB completion conflicts with ultisnips so change
+" to Enter
+"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><Enter>  pumvisible() ? "\<C-n>" : "\<Enter>"
+" close preview window on completion
+"autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+set completeopt-=preview
+
+" deoplete-go
+g:deoplete#sources#go#source_importer = 1
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -60,15 +77,15 @@ if has('gui_running')
 	set guioptions-=r
 	set guioptions-=L
 endif
-"set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 10
-set guifont=Fixedsys\ Excelsior\ 3.01\ 12
+set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
+"set guifont=Fixedsys\ Excelsior\ 3.01\ 12
 set ffs=unix,dos
 set cursorline
 
 " render tabs and trailing spaces
 nmap <leader>l :set list!<CR>
 set list
-set listchars=tab:\|\ ,extends:\>,nbsp:. "trail:-,
+set listchars=tab:\|\ ",extends:\>,nbsp:. "trail:-,
 
 " invisible character colors
 highlight NonText guifg=#4a4a59
@@ -108,10 +125,7 @@ inoremap "<CR>  "<CR>"<Esc>O
 inoremap ""     "
 inoremap ""     ""
 " automatically add closing '
-inoremap '      ''<Left>
-inoremap '<CR>  '<CR>'<Esc>O
-inoremap ''     '
-inoremap ''     ''
-
-vmap <C-c> y:call system("xclip -i -selection clipboard", getreg("\""))<CR>:call system("xclip -i", getreg("\""))<CR>
-nmap <C-v> :call setreg("\"",system("xclip -o -selection clipboard"))<CR>
+"inoremap '      ''<Left>
+"inoremap '<CR>  '<CR>'<Esc>O
+"inoremap ''     '
+"inoremap '' ''
